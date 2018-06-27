@@ -11,14 +11,26 @@ public class PlayerInteraction : MonoBehaviour {
 	private RaycastHit2D[] results;
 	private Collider2D playerCollider;
 
+	private float textTime;
+
 	// Use this for initialization
 	void Start () {
 		playerCollider = gameObject.GetComponent<Collider2D>();
+		textTime = Time.time;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		CheckForInteraction();
+		ClearText();
+	}
+
+	void ClearText() {
+		if (Time.time > textTime + 5f) {
+			GameObject infoTextObject = GameObject.Find("InfoText");
+			Text infoText = infoTextObject.GetComponent <Text> ();
+			infoText.text = "";
+		}
 	}
 
 	void CheckForInteraction() {
@@ -38,7 +50,13 @@ public class PlayerInteraction : MonoBehaviour {
 						PickupItem(hit.collider.gameObject);
 						break;
 					case "Water":
-						PlayerSurf(hit.collider.gameObject, playerDirection);
+						PlayerSurf(playerDirection);
+						break;
+					case "Sign":
+						ReadSign(hit.collider.gameObject);
+						break;
+					case "Person":
+						TalkToPerson(hit.collider.gameObject);
 						break;
 					default:
 						Debug.Log("Collider has no Interaction options");
@@ -47,6 +65,21 @@ public class PlayerInteraction : MonoBehaviour {
 			}
 		}
     }
+
+	void ReadSign(GameObject sign) {
+		string signText = sign.GetComponent	<Sign> ().GetSignText();
+		GameObject infoTextObject = GameObject.Find("InfoText");
+		Text infoText = infoTextObject.GetComponent <Text> ();
+
+		infoText.text = signText;
+
+		textTime = Time.time;
+
+	}
+
+	void TalkToPerson(GameObject person) {
+
+	}
 
 	void PickupItem(GameObject itemObj) {
 		ItemIdentifier item = itemObj.GetComponent<ItemIdentifier>();
@@ -60,7 +93,7 @@ public class PlayerInteraction : MonoBehaviour {
 		}
 	}
 
-	void PlayerSurf(GameObject water, Vector2 playerDirection) {
+	void PlayerSurf(Vector2 playerDirection) {
 		List<string> inventory = PlayerInventory.GetPlayerInventory();
 
 		if(inventory.Contains("Surf")) {
