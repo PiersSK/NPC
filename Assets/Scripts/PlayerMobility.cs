@@ -48,7 +48,7 @@ public class PlayerMobility : MonoBehaviour {
             playerAnimator.Play("Idle");
         }
 
-        transform.Translate(xInput * playerSpeed, yInput * playerSpeed, 0);
+        transform.Translate(xInput * playerSpeed * Time.deltaTime, yInput * playerSpeed * Time.deltaTime, 0);
     }
 
     public static Vector2 GetPlayerDirection() {
