@@ -7,9 +7,11 @@ public class PlayerMobility : MonoBehaviour {
 	//Inspector Variables
     public float playerSpeed; //speed player moves
     public GameObject camera;
+
     private Vector3 offset;
     private Vector3 spawnPoint;
     private Animator playerAnimator;
+    private Rigidbody2D playerRB;
     private static float faceX;
     private static float faceY;
 
@@ -17,6 +19,7 @@ public class PlayerMobility : MonoBehaviour {
         SetSpawnPoint();
         playerAnimator = GetComponent<Animator>();
         playerAnimator.Play("Idle");
+        playerRB = gameObject.GetComponent<Rigidbody2D>();
     }
    
     void Update () {
@@ -58,7 +61,9 @@ public class PlayerMobility : MonoBehaviour {
             playerAnimator.Play("Idle");
         }
 
-        transform.Translate(xInput * playerSpeed * Time.deltaTime, yInput * playerSpeed * Time.deltaTime, 0);
+        // transform.Translate(xInput * playerSpeed * Time.deltaTime, yInput * playerSpeed * Time.deltaTime, 0);
+
+        playerRB.velocity = new Vector3(xInput, yInput) * playerSpeed; //removes vibrations
     }
 
     public static Vector2 GetPlayerDirection() {
