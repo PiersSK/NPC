@@ -2,9 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerInteraction : MonoBehaviour {
 	public float pickupRange;
+	public Text infoText;
+
 	private RaycastHit2D[] results;
 	private Collider2D playerCollider;
 
@@ -49,7 +52,12 @@ public class PlayerInteraction : MonoBehaviour {
 		ItemIdentifier item = itemObj.GetComponent<ItemIdentifier>();
 
 		bool itemObtained = PlayerInventory.AddItemToInventory(item.itemName);
-		if(itemObtained) Destroy(itemObj);
+		if(itemObtained) {
+			Destroy(itemObj);
+			infoText.text = "Obtained item: " + item.itemName;
+		} else {
+			infoText.text = "Inventory is full!";			
+		}
 	}
 
 	void PlayerSurf(GameObject water, Vector2 playerDirection) {
