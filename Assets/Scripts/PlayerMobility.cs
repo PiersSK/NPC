@@ -24,14 +24,24 @@ public class PlayerMobility : MonoBehaviour {
     }
 
     void SetSpawnPoint() {
-        int returningFromRoom = PlayerPrefs.GetInt("returningFromRoom"); //1 = true, 0 = false
-        spawnPoint = returningFromRoom == 1
-            ? new Vector3(12.5f, 8.3f, 0)
+        int returningFromScene = PlayerPrefs.GetInt("returningFromScene"); //1 = true, 0 = false
+        Vector3 savedSpawnPoint = new Vector3(PlayerPrefs.GetFloat("spawnX"), PlayerPrefs.GetFloat("spawnY"), 0);
+
+        spawnPoint = returningFromScene == 1
+            ? savedSpawnPoint
             : new Vector3(0, 0, 0);
+
         offset = camera.transform.position - transform.position;
         transform.position = spawnPoint;
         camera.transform.position = spawnPoint + offset;
-        PlayerPrefs.SetInt("returningFromRoom", 0);
+
+        setSpawnDefaults();
+    }
+
+    void setSpawnDefaults() {
+        PlayerPrefs.SetInt("returningFromScene", 0);
+        PlayerPrefs.SetFloat("spawnX", 0);
+        PlayerPrefs.SetFloat("spawnY", 0);
     }
 
     void MoveForward() {

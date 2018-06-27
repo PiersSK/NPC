@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StepOnGrass : MonoBehaviour {
 
@@ -22,11 +23,40 @@ public class StepOnGrass : MonoBehaviour {
 		} else {
 			grassRenderer.sortingOrder = 1;
 		}
+		CheckForBattle();
     }
 
 	void OnTriggerExit2D() {
-		Debug.Log("player leaves");
 		grassRenderer.sprite = grassNormal;
 		grassRenderer.sortingOrder = 1;
     }
+
+	void CheckForBattle() {
+		float battleCheck = Random.Range(0.0f, 400.0f);
+		if(battleCheck < 1) {
+			PlayerPrefs.SetFloat("spawnX", transform.position.x);
+        	PlayerPrefs.SetFloat("spawnY", transform.position.y);
+			ChooseEncounter();
+			SceneManager.LoadScene("Battle");
+		}
+	}
+
+	void ChooseEncounter() {
+		int pokemon = Random.Range(1, 4);
+		switch (pokemon)
+		{
+			case 1:
+				PlayerPrefs.SetString("enemy", "Pikachu");
+				break;
+			case 2:
+				PlayerPrefs.SetString("enemy", "Mew");
+				break;
+			case 3:
+				PlayerPrefs.SetString("enemy", "Ganon");
+				break;
+			default:
+				Debug.Log("RNGesus h8s u");
+				break;
+		}
+	}
 }
